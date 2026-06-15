@@ -103,7 +103,7 @@ def render_kpi_row(df: pd.DataFrame):
     clicks = df["clicks"].sum()
     impressions = df["impressions"].sum()
     conversions = df["conversion_flag"].sum()
-    revenue = df["revenue"].sum()
+    revenue = df["conversion_value"].sum()
 
     cpc = spend / clicks          if clicks > 0          else 0
     cpm = spend / impressions * 1000 if impressions > 0  else 0
@@ -143,7 +143,7 @@ def tab_cross_channel(df: pd.DataFrame):
     with col1:
         st.markdown('<p class="section-header">Spend vs Revenue by Channel</p>', unsafe_allow_html=True)
         fig = go.Figure()
-        for val, label, color in [("spend","Spend","#636EFA"),("revenue","Revenue","#00CC96")]:
+        for val, label, color in [("spend","Spend","#636EFA"),("conversion_value","Revenue","#00CC96")]:
             fig.add_trace(go.Bar(name=label, x=ch["channel_type"], y=ch[val], marker_color=color))
         fig.update_layout(barmode="group", height=320, margin=dict(t=10,b=30),
                           legend=dict(orientation="h", y=1.1))
@@ -233,7 +233,7 @@ def tab_full_funnel(df: pd.DataFrame):
 
     st.markdown('<p class="section-header">Spend vs Revenue by Funnel Stage</p>', unsafe_allow_html=True)
     fig = go.Figure()
-    for val, label, color in [("spend","Spend","#636EFA"),("revenue","Revenue","#00CC96")]:
+    for val, label, color in [("spend","Spend","#636EFA"),("conversion_value","Revenue","#00CC96")]:
         fig.add_trace(go.Bar(name=label, x=fn["consumer_stage"].astype(str),
                              y=fn[val], marker_color=color))
     fig.update_layout(barmode="group", height=300, margin=dict(t=10,b=20),
@@ -283,10 +283,10 @@ def tab_campaigns(df: pd.DataFrame):
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown('<p class="section-header">Campaign Summary Table</p>', unsafe_allow_html=True)
-    display_cols = ["campaign_id","spend","revenue","conversions",
+    display_cols = ["campaign_id","spend","conversion_value","conversions",
                     "cpc","cpm","cpa","roi","cvr",
                     "avg_effectiveness","avg_attribution","unique_customers"]
-    fmt = {"spend":"${:,.2f}","revenue":"${:,.2f}","cpc":"${:.2f}","cpm":"${:.2f}",
+    fmt = {"spend":"${:,.2f}","conversion_value":"${:,.2f}","cpc":"${:.2f}","cpm":"${:.2f}",
            "cpa":"${:.2f}","roi":"{:.1f}%","cvr":"{:.1%}",
            "avg_effectiveness":"{:.3f}","avg_attribution":"{:.3f}"}
     st.dataframe(camp[display_cols].style.format(fmt), use_container_width=True, height=420)
@@ -348,7 +348,7 @@ def tab_time_trends(df: pd.DataFrame):
 
     st.markdown('<p class="section-header">Weekly Spend, Revenue & ROI</p>', unsafe_allow_html=True)
     fig = make_subplots(specs=[[{"secondary_y": True}]])
-    for val, color in [("spend","#636EFA"),("revenue","#00CC96")]:
+    for val, color in [("spend","#636EFA"),("conversion_value","#00CC96")]:
         fig.add_trace(go.Scatter(x=ts["week"], y=ts[val], name=val.title(),
                                  mode="lines", line=dict(color=color, width=2)), secondary_y=False)
     fig.add_trace(go.Scatter(x=ts["week"], y=ts["roi"], name="ROI (%)",
