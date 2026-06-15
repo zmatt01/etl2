@@ -65,7 +65,7 @@ def compute_ltv_cac(df: pd.DataFrame) -> pd.DataFrame:
         ltv=("customer_lifetime_value", "mean"),
         cac=("marketing_cost", "sum"),
         total_conversions=("conversion_flag", "sum"),
-        total_revenue=("revenue", "sum"),
+        total_revenue=("conversion_value", "sum"),
         touchpoints=("touchpoint_id", "count"),
     ).reset_index()
 
@@ -80,7 +80,7 @@ def build_channel_summary(df: pd.DataFrame) -> pd.DataFrame:
         clicks=("clicks", "sum"),
         impressions=("impressions", "sum"),
         conversions=("conversion_flag", "sum"),
-        revenue=("revenue", "sum"),
+        revenue=("conversion_value", "sum"),
         avg_engagement=("engagement_score", "mean"),
         avg_sentiment=("sentiment_score", "mean"),
         avg_attribution=("attribution_weight", "mean"),
@@ -104,7 +104,7 @@ def build_funnel_summary(df: pd.DataFrame) -> pd.DataFrame:
         touchpoints=("touchpoint_id", "count"),
         spend=("marketing_cost", "sum"),
         conversions=("conversion_flag", "sum"),
-        revenue=("revenue", "sum"),
+        revenue=("conversion_value", "sum"),
         avg_session=("session_duration_sec", "mean"),
         avg_engagement=("engagement_score", "mean"),
         avg_sentiment=("sentiment_score", "mean"),
@@ -126,7 +126,7 @@ def build_campaign_summary(df: pd.DataFrame) -> pd.DataFrame:
         clicks=("clicks", "sum"),
         impressions=("impressions", "sum"),
         conversions=("conversion_flag", "sum"),
-        revenue=("revenue", "sum"),
+        revenue=("conversion_value", "sum"),
         touchpoints=("touchpoint_id", "count"),
         unique_customers=("customer_id", "nunique"),
         avg_effectiveness=("effectiveness_score", "mean"),
@@ -162,7 +162,7 @@ def build_time_series(df: pd.DataFrame) -> pd.DataFrame:
         clicks=("clicks", "sum"),
         impressions=("impressions", "sum"),
         conversions=("conversion_flag", "sum"),
-        revenue=("revenue", "sum"),
+        revenue=("conversion_value", "sum"),
     ).reset_index()
     ts["roi"]  = (ts["revenue"] - ts["spend"]) / ts["spend"] * 100
     ts["cpc"]  = ts["spend"] / ts["clicks"]
